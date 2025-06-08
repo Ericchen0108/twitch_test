@@ -1,134 +1,116 @@
-# Twitch Mobile Automation Framework
+# Twitch Mobile Test Automation
 
-A scalable and maintainable automation framework for testing Twitch mobile web application using Selenium and pytest.
+This is a Selenium automation project that tests Twitch's mobile website. It searches for StarCraft II streams, picks a random streamer, and takes a screenshot.
 
-## Features
+## Requirements
 
-- Mobile device emulation (iPhone 12 Pro)
-- Framework-based design for scalability
-- Automated screenshot capture
-- Cross-platform compatibility
-- Clean test reporting
-
-## Prerequisites
+You'll need:
 
 - Python 3.9+
 - Chrome browser
-- ChromeDriver (included for macOS ARM64)
+- ChromeDriver (matching your Chrome version)
+
+Check your Python version first:
+
+```bash
+python3 --version
+```
 
 ## Setup
 
-1. Clone the repository:
+Clone the repo and set up a virtual environment:
 
 ```bash
-git clone <repository-url>
-cd opennet
+git clone <your-repo-url>
+cd twitch_test
+
+# Create and activate virtual environment
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip3 install -r requirements.txt
 ```
 
-2. Create virtual environment:
+## ChromeDriver Setup
+
+You have two options:
+
+**Option 1 (recommended):** Download ChromeDriver manually
+
+1. Check your Chrome version (Chrome → Help → About Google Chrome)
+2. Download matching version from https://chromedriver.chromium.org/downloads
+3. Extract it to the `drivers/` folder:
+   - macOS: `drivers/chromedriver-mac-arm64/chromedriver`
+   - Linux: `drivers/chromedriver-linux64/chromedriver`
+   - Windows: `drivers/chromedriver-win32/chromedriver.exe`
+
+**Option 2:** Let webdriver-manager handle it automatically (already included in requirements.txt)
+
+## Running the Test
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+python3 -m pytest tests/test_twitch_mobile.py -v
 ```
 
-3. Install dependencies:
+For HTML reports:
 
 ```bash
-pip install -r requirements.txt
+python3 -m pytest tests/test_twitch_mobile.py -v --html=reports/report.html --self-contained-html
 ```
 
-## Running Tests
+## What it does
 
-### Basic Test Execution
+The test workflow:
+
+1. Goes to Twitch homepage
+2. Searches for "StarCraft II"
+3. Scrolls down twice to load more streams
+4. Randomly picks a streamer
+5. Waits for the stream page to load
+6. Takes a screenshot (saved to `screenshots/` folder)
+
+## Project Structure
+
+```
+twitch_test/
+├── twitch_mobile/
+│   ├── __init__.py
+│   └── automation.py        # Main automation logic
+├── tests/
+│   ├── conftest.py         # pytest fixtures and config
+│   └── test_twitch_mobile.py
+├── drivers/                # Put ChromeDriver here
+├── screenshots/            # Screenshots end up here
+├── reports/                # HTML reports
+└── requirements.txt
+```
 
 ```bash
-# Run all tests
-python -m pytest test_twitch_mobile.py -v
-
-# Run with live output
-python -m pytest test_twitch_mobile.py -v -s
-
-# Generate HTML report
-python -m pytest test_twitch_mobile.py -v --html=reports/report.html --self-contained-html
+chmod +x drivers/chromedriver-mac-arm64/chromedriver
 ```
 
-### Test Workflow
+**Test failing?** Twitch's UI changes sometimes, or there might not be many StarCraft streamers online. Try running it again or at different times.
 
-The test performs the following actions:
+**Import errors?** Double-check your virtual environment is activated:
 
-1. Navigate to Twitch homepage
-2. Search for "StarCraft II"
-3. Scroll page twice to load content
-4. Randomly select a streamer
-5. Wait for page to load completely
-6. Take screenshot
-
-## Framework Structure
-
-```
-opennet/
-├── test_twitch_mobile.py      # Main test file with framework
-├── conftest.py                # pytest configuration and fixtures
-├── requirements.txt           # Python dependencies
-├── screenshots/               # Test screenshots (auto-generated)
-├── reports/                   # Test reports (auto-generated)
-└── chromedriver-mac-arm64/    # ChromeDriver for macOS ARM64
+```bash
+source venv/bin/activate
+pip list  # Should show selenium, pytest, etc.
 ```
 
-## Framework Design
+## Notes
 
-### TwitchMobileAutomation Class
+- Uses iPhone 12 Pro mobile emulation
+- Takes screenshots for debugging when things go wrong
+- Sometimes Twitch takes a while to load - the waits should handle this
+- If no streamers are found, try running when more people are streaming
 
-Core automation framework with reusable methods:
+The test is designed to be reasonably robust, but web scraping can be flaky due to network issues or site changes.
 
-- `navigate_to_homepage()` - Navigate to Twitch
-- `search_for_game(game_name)` - Search functionality
-- `scroll_page(times)` - Page scrolling
-- `select_random_streamer()` - Random streamer selection
-- `wait_for_page_load()` - Page load waiting
-- `take_screenshot(suffix)` - Screenshot capture
+## Dependencies
 
-### TestTwitchMobile Class
-
-Test implementation using the framework:
-
-- `test_search_and_screenshot_workflow()` - Complete test workflow
-
-## Configuration
-
-### Mobile Device Emulation
-
-Configured in `conftest.py` to emulate iPhone 12 Pro.
-
-### Screenshot Storage
-
-Screenshots are automatically saved to `screenshots/` directory with timestamp.
-
-### Test Reports
-
-HTML reports are generated in `reports/` directory when using `--html` option.
-
-## Troubleshooting
-
-### ChromeDriver Issues
-
-- For macOS ARM64: ChromeDriver is included in the project
-- For other platforms: Ensure ChromeDriver is in PATH or update `conftest.py`
-
-### Test Failures
-
-- Check `screenshots/` for error screenshots
-- Review test reports in `reports/` directory
-- Ensure stable internet connection
-
-## Contributing
-
-1. Follow the framework pattern for new tests
-2. Keep methods focused and reusable
-3. Add appropriate error handling
-4. Include screenshot capture on failures
-
-## License
-
-MIT License - see LICENSE file for details.
+- `selenium` - browser automation
+- `pytest` - test framework
+- `pytest-html` - generates nice HTML reports
+- `webdriver-manager` - backup ChromeDriver management

@@ -24,4 +24,7 @@ Thumbs.db
 # Project specific
 screenshots/*.png
 reports/
-*.log 
+*.log
+
+# ChromeDriver
+drivers/ 
