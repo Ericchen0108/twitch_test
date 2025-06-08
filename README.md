@@ -2,6 +2,22 @@
 
 This is a Selenium automation project that tests Twitch's mobile website. It searches for StarCraft II streams, picks a random streamer, and takes a screenshot.
 
+## Project Structure
+
+```
+twitch_test/
+├── twitch_mobile/
+│   ├── __init__.py
+│   └── automation.py        # Main automation logic
+├── tests/
+│   ├── conftest.py         # pytest fixtures and config
+│   └── test_twitch_mobile.py
+├── drivers/                # Put ChromeDriver here
+├── screenshots/            # Screenshots end up here
+├── reports/                # HTML reports
+└── requirements.txt
+```
+
 ## Requirements
 
 You'll need:
@@ -32,7 +48,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip3 install -r requirements.txt
 ```
 
-## ChromeDriver Setup
+### ChromeDriver Setup
 
 You have two options:
 
@@ -70,43 +86,18 @@ The test workflow:
 5. Waits for the stream page to load
 6. Takes a screenshot (saved to `screenshots/` folder)
 
-## Project Structure
+## Notes
 
-```
-twitch_test/
-├── twitch_mobile/
-│   ├── __init__.py
-│   └── automation.py        # Main automation logic
-├── tests/
-│   ├── conftest.py         # pytest fixtures and config
-│   └── test_twitch_mobile.py
-├── drivers/                # Put ChromeDriver here
-├── screenshots/            # Screenshots end up here
-├── reports/                # HTML reports
-└── requirements.txt
-```
+- Uses iPhone 12 Pro mobile emulation
+- Sometimes Twitch takes a while to load - the waits should handle this
+- If no streamers are found, try running when more people are streaming
+- The test is designed to be reasonably robust, but web scraping can be flaky due to network issues or site changes
+
+If you get permission errors on macOS/Linux, make the driver executable:
 
 ```bash
 chmod +x drivers/chromedriver-mac-arm64/chromedriver
 ```
-
-**Test failing?** Twitch's UI changes sometimes, or there might not be many StarCraft streamers online. Try running it again or at different times.
-
-**Import errors?** Double-check your virtual environment is activated:
-
-```bash
-source venv/bin/activate
-pip list  # Should show selenium, pytest, etc.
-```
-
-## Notes
-
-- Uses iPhone 12 Pro mobile emulation
-- Takes screenshots for debugging when things go wrong
-- Sometimes Twitch takes a while to load - the waits should handle this
-- If no streamers are found, try running when more people are streaming
-
-The test is designed to be reasonably robust, but web scraping can be flaky due to network issues or site changes.
 
 ## Dependencies
 
