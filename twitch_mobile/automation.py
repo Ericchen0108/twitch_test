@@ -1,9 +1,13 @@
-import time
+"""
+Twitch mobile automation framework
+"""
 import os
+import time
 from datetime import datetime
+
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 
@@ -25,13 +29,17 @@ class TwitchMobileAutomation:
         try:
             # Click browse button
             browse_button = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, "//div[text()='瀏覽']"))
+                EC.element_to_be_clickable(
+                    (By.XPATH, "//div[text()='瀏覽']")
+                )
             )
             browse_button.click()
 
             # Click search box
             search_box = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, "input[type='search']"))
+                EC.element_to_be_clickable(
+                    (By.CSS_SELECTOR, "input[type='search']")
+                )
             )
             search_box.clear()
             search_box.send_keys(game_name)

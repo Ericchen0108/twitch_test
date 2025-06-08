@@ -57,5 +57,5 @@ def pytest_configure(config):
 
 
 def pytest_html_report_title(report):
-    """设置HTML报告标题"""
-    report.title = "Twitch移动端自动化测试报告" 
+    """Set HTML report title"""
+    report.title = "Twitch Mobile Automation Test Report" 
